@@ -32,7 +32,7 @@ import sys
 from gpiozero import CPUTemperature
 
 cpu = CPUTemperature()
-print("The current temperature is: " + cpu.temperature + " Deg. C")
+print("The current temperature is: " + str(cpu.temperature) + " Deg. C")
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
