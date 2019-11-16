@@ -1,11 +1,17 @@
 #########################################################################
 # Name: raspi-fancontrol.py:
-# Copyright (c) 2019 @c0ri <gaggleoffools@gmail.com>
-#                    
+# Copyright (c) 2019 c0ri <gaggleoffools@gmail.com> 
 # Description:
 # This is a little Python code which will control a simple fan for your
-# Raspberry Pi.
-# Requires: rpigpio
+# Raspberry Pi. 
+# 
+# Updates:
+#   I have since turned this into a deamon for various reasons. I left 
+#   this code here to test the outputs on your GPIO Pins. You need to
+#   figure out which pin to use BCM or BOARD. After setting that below
+#   then you will need to also set the fan variable for the correct pin.
+#
+# Requires: rpigpio  
 #  pip install rpigpio
 #  I wrote this for Python v2.x
 #
@@ -27,6 +33,7 @@
 ##########################################################################
 
 import RPi.GPIO as GPIO
+import time
 from time import sleep
 import sys
 from gpiozero import CPUTemperature
@@ -35,17 +42,22 @@ cpu = CPUTemperature()
 print("The current temperature is: " + str(cpu.temperature) + " Deg. C")
 
 GPIO.setmode(GPIO.BCM)
+#GPIO.setmode(GPIO.BOARD)
 GPIO.setwarnings(False)
 
 # -- Fan set to GPIO Pin 7
-fan = 7
+fan = 11
 # -- Setup Fan
 GPIO.setup(fan, GPIO.OUT)
 
-if cpu.temperature >= "55":
+if cpu.temperature >= 55.0:
+    print("Fan setting is ON")
     GPIO.output(fan, GPIO.HIGH)
-elif cpu.temperature <= "45":
+elif cpu.temperature <= 45.0:
+    print("Fan setting is OFF")
     GPIO.output(fan, GPIO.LOW)
 else:
     # -- If we can't read the temperature or for some reason it didn't return, fail with fan on.
     GPIO.output(fan, GPIO.HIGH)
+
+time.sleep(5)
